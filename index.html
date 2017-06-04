@@ -1,0 +1,187 @@
+<html>
+<head>
+	<title>Time Table Generator (For Teachers)</title>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-blue.min.css" /> 
+	<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+</head>
+<body>
+	<!-- Always shows a header, even in smaller screens. -->
+	<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+	<header class="mdl-layout__header">	
+			<div class="mdl-layout__header-row">
+				<!-- Title -->
+				<span class="mdl-layout-title"><b>Class Time Table Generator</b> (for Teachers)</span>
+				<!-- Add spacer, to align navigation to the right -->
+				<div class="mdl-layout-spacer"></div>
+				<!-- Navigation. We hide it in small screens. -->
+<!--       <nav class="mdl-navigation mdl-layout--large-screen-only">
+        <a class="mdl-navigation__link" href="">Link</a>
+        <a class="mdl-navigation__link" href="">Link</a>
+        <a class="mdl-navigation__link" href="">Link</a>
+        <a class="mdl-navigation__link" href="">Link</a>
+    </nav> -->
+</div>
+</header>
+<main class="mdl-layout__content">
+	<div class="page-content">
+
+		<div class="mdl-grid" style="margin-top:50px;">
+			<div class="mdl-layout-spacer"></div>
+			<div class="mdl-cell mdl-cell--9-col">
+				<form class="form-horizontal timetableform" id="timetableform" name="timetableform">
+					<fieldset>
+
+						<!-- Form Name -->
+<!-- <legend>Time Table Generator</legend>
+-->
+
+<!-- Numeric Textfield with Floating Label -->
+<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+	<input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="sample4" name="noOfDays">
+	<label class="mdl-textfield__label" for="sample4">Total Number of working Days.</label>
+	<span class="mdl-textfield__error">Input is not a number!</span>
+</div>
+
+<!-- Numeric Textfield with Floating Label -->
+<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+	<input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="sample4" name="noOfPeriodsPerDay">
+	<label class="mdl-textfield__label" for="sample4">Number of Periods. For e.g. "8"</label>
+	<span class="mdl-textfield__error">Input is not a number!</span>
+</div>
+
+<!-- Subject input-->
+<div class="input_fields_wrap">
+	<div>
+
+		<!-- Textfield with Floating Label -->
+		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+			<input class="mdl-textfield__input" type="text" id="sample3" name="subject">
+			<label class="mdl-textfield__label" for="sample3">Subject Name</label>
+		</div>
+
+		<!-- Numeric Textfield with Floating Label -->
+		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+			<input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="sample4" name="subjecttimes">
+			<label class="mdl-textfield__label" for="sample4">No. of times per week</label>
+			<span class="mdl-textfield__error">Input is not a number!</span>
+		</div>
+
+	</div>
+</div>
+<!-- Accent-colored raised button with ripple -->
+<button class="add_field_button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Add More Subjects</button>
+<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
+	Generate
+</button>
+
+</fieldset>
+</form>
+<div class="mdl-layout-spacer"></div>
+</div>
+</div>
+<div class="mdl-grid">
+	<div class="mdl-layout-spacer"></div>
+	<div class="mdl-cell mdl-cell--9-col">
+		<div id="tableDiv"></div>
+		<div class="mdl-layout-spacer"></div>
+	</div>
+	<!-- The Algorithm is not perfect. It returns unexpected values at times. Please cross check -->
+</div>
+
+</main>
+</div>
+</div>
+
+
+<script
+src="https://code.jquery.com/jquery-3.2.1.min.js"
+integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="index.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+    var max_fields      = 15-1; //maximum input boxes allowed
+    var wrapper         = $(".input_fields_wrap"); //Fields wrapper
+    var add_button      = $(".add_field_button"); //Add button ID
+
+    // var appendContent = wrapper.html();
+    // appendContent = appendContent.substr(0, appendContent.length-7);
+    // appendContent = appendContent.substr(64);
+
+    var appendContent = "<div><div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\"><input class=\"mdl-textfield__input\" type=\"text\" id=\"sample3\" name=\"subject\"><label class=\"mdl-textfield__label\" for=\"sample3\">Subject Name</label></div> <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\"><input class=\"mdl-textfield__input\" type=\"text\" pattern=\"-?[0-9]*(\.[0-9]+)?\" id=\"sample4\" name=\"subjecttimes\"><label class=\"mdl-textfield__label\" for=\"sample4\">No. of times per week</label><span class=\"mdl-textfield__error\">Input is not a number!</span></div>"
+
+    appendContent = appendContent + "<a href=\"#\" class=\"remove_field\">Remove</a></div>";
+    // console.log(appendContent);
+
+    $(wrapper).append(appendContent);
+    componentHandler.upgradeDom();
+
+    
+    var x = 1; //initlal text box count
+    $(add_button).click(function(e){ //on add input button click
+    	e.preventDefault();
+        if(x < max_fields){ //max input box allowed
+            x++; //text box increment
+            $(wrapper).append(appendContent);
+            componentHandler.upgradeDom();
+
+        }
+    });
+    
+    $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
+    	e.preventDefault(); $(this).parent('div').remove(); x--;
+    });
+
+    function makeTableHTML(myArray) {
+    	var result = "<table class=\"mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp\">";
+    	for(var i=0; i<myArray.length; i++) {
+    		result += "<tr>";
+    		for(var j=0; j<myArray[i].length; j++){
+    			result += "<td class=\"mdl-data-table__cell--non-numeric\">"+myArray[i][j]+"</td>";
+    		}
+    		result += "</tr>";
+    	}
+    	result += "</table>";
+    	return result;
+    }
+
+    $("#timetableform").submit(function(event) {
+    	// event.preventDefault();
+    	if(!$.isNumeric($("input[name='subjecttimes']").val()) || !$.isNumeric($("input[name='noOfDays']").val()) || !$.isNumeric($("input[name='noOfPeriodsPerDay']").val())){
+    		alert("Not a number");
+    		return false;
+    	}
+    	var subjectsArray = "";
+    	var comma;
+    	for(i=0;i<$("input[name='subject']").length;i++){
+    		if(i == $("input[name='subject']").length-1) {comma = ""; } else { comma = ","; }
+    		
+    		subjectsArray = subjectsArray + "{\"name\": \"" + $("input[name='subject']").eq(i).val() + "\",\"noOfTimes\":\"" + $("input[name='subjecttimes']").eq(i).val() + "\"}" + comma;
+    	}
+    	subjectsArray = "{\"subject\": [" + subjectsArray + "]}";
+    	subjectsArray = JSON.parse(subjectsArray);
+
+    	var totalTimesOfSubjects = 0;
+    	for(i=0;i<subjectsArray.subject.length;i++){
+    		totalTimesOfSubjects = totalTimesOfSubjects + subjectsArray.subject[i].noOfTimes;
+    	}
+    	if(totalTimesOfSubjects < ($("input[name='noOfDays']").val()*$("input[name='noOfPeriodsPerDay']").val()))
+    	{
+    		alert("You have an error in your No of times");
+    		return false;
+    	}
+
+    	var noOfDays = $("input[name='noOfDays']").val();
+    	var noOfPeriodsPerDay = $("input[name='noOfPeriodsPerDay']").val();
+
+    	var tableDiv = document.getElementById("tableDiv");
+    	tableDiv.innerHTML = makeTableHTML(generateTimeTable(noOfDays,noOfPeriodsPerDay,subjectsArray));
+    	// console.log(JSON.parse(subjectsArray));
+    	return false;
+    });
+});
+</script>
+</body>
+</html>
